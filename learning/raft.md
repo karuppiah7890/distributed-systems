@@ -92,7 +92,7 @@ Some more questions from the above para about what's Raft -
 
 - `Raft is a consensus algorithm`, is there a formal definition for what's a consensus algorithm? Like, what's the problem statement and what's expected of the solution? Considering Raft is a particular solution / implementation [Question]
 
-- `that is designed to be easy to understand` - How did they come to the conclusion that it's easy to understand? Given easy and hard are subjective. Also, how do they know that the design is easy to understand, how did they even approach the problem with design, specifically easy to understand design as the main goal? Like, are there some designs that are easy to understand? Did they just go ahead and use that, like, use some existing approach? How did the authors think about the solution? 🤔 [Question]
+- `that is designed to be easy to understand` - How did they come to the conclusion that it's easy to understand? Given easy and hard are subjective. Also, how do they know that the design is easy to understand, how did they even approach the problem with design, specifically easy to understand design as the main goal? Like, are there some designs that are easy to understand? Did they just go ahead and use that, like, use some existing approach? How did the authors think about the solution? 🤔 [Question] [Answered]
 
 - `It's equivalent to Paxos in fault-tolerance and performance.` - How do they say this statement? Are there some sort of numbers to prove this? Numbers that denote fault-tolerance and performance for both Paxos and Raft and show that they are the same? Does the Raft paper prove this? Or this is just a general statement? Also, if there are numbers, what exactly do they denote under fault-tolerance and performance? As those are very generic, for example performance can mean "very fast" but uses more resources, or "very fast" but uses less resources comparatively, "uses less disk space" etc. Also, what do they mean by fault-tolerance? Like, what kind of faults / issues can it tolerate? Nodes going down? Network issues? [Question]
 
@@ -154,6 +154,54 @@ Questions
 - is it possible that no leader gets elected in a term? [Question]
 - is it possible that no leader gets elected ever at some point? [Question]
 - when can leader election always fail for sure? Like, a leader is never elected at all, any time. Is that possible? [Question]
+
+---
+
+I'm watching this talk now - https://www.youtube.com/watch?v=vYp4LYbnnW8 It's just wow! It shows a bit about the history of how Raft came to be, and what was in the minds of the creators while designing Raft. It also kind of answers some of the questions I had. For example, to answer the question of - easy to understand
+
+---
+
+[Question-And-Answer]
+
+`that is designed to be easy to understand` - How did they come to the conclusion that it's easy to understand? Given easy and hard are subjective. Also, how do they know that the design is easy to understand, how did they even approach the problem with design, specifically easy to understand design as the main goal? Like, are there some designs that are easy to understand? Did they just go ahead and use that, like, use some existing approach? How did the authors think about the solution? 🤔
+
+[Answer]
+
+The creators did a user study it seems. I'm yet to watch the section in this video https://www.youtube.com/watch?v=vYp4LYbnnW8 . I did notice two user studies here - 
+
+Paxos Lecture (Raft user study) - https://www.youtube.com/watch?v=JEpsBg0AO6o
+
+Raft Lecture (Raft user study) - https://www.youtube.com/watch?v=YbZ3zDzDnrw
+
+I have to check those and check what they exactly did. From the initial parts of https://www.youtube.com/watch?v=vYp4LYbnnW8 - it was mentioned that the user study confirmed that Raft was easier to understand than Paxos
+
+Apart from this, the author Professor John Ousterhout also talks about other things that they did to ensure that Raft is easy to understand - for example, things like minimal state space - he mentioned it's like less if statements in a program
+
+`minimal state space` - does it mean less number of possible states in a state machine? [Question]
+
+The whole design started with the main goal of understandability, as Paxos was hard to understand and Professor John Ousterhout had a hard time wrapping his head around it. It seems he understood it really well only after designing Raft. So, he had to build a whole new consensus algorithm to understand it. He also mentioned how he believed Paxos after reading the proof of correctness and understood that it works but couldn't understand how it works and also couldn't get an intuitive idea of how it works
+
+Raft is also easy to understand because it tries to use lesser things to solve more. For example, a single mechanism to solve multiple problems. How does this show up in the Raft design? For example, the AppendEntries Remote Procedure Call (RPC) is used by the leader to append log entries in other machines to replicate logs AND it is also used by the leader to send heart beats to other machines by using the same AppendEntries RPC but with no log in it, so, more like an empty message / empty thing, for using it as a heart beat. See? AppendEntries is a mechanism that solves two problems - log replication AND heartbeat :)
+
+Raft is also designed in such a way that there are no special cases. Common cases should take care of stuff - all stuff. Interesting thing!
+
+There's also a mention about maximizing coherence and minimizing non-determinism. This is something I need to read about. The talk mentions that it's not possible to completely eliminate non-determinism, why? [Question]
+
+Also, there are less things for people to understand I guess. In terms of Server states - there's only 3 of them - follower, candidate and leader
+
+There are only two RPCs in Raft - RequestVote and AppendEntries, that's all. And like simple procedures / functions which have input and output, or like HTTP with request and response, in RPCs there's request and response (or reply) and both of the RequestVote and AppendEntries RPCs have those
+
+---
+
+The talk "Designing for Understandability: The Raft Consensus Algorithm" by John Ousterhout https://www.youtube.com/watch?v=vYp4LYbnnW8 was part of the " CS @ ILLINOIS Distinguished Lecture Series" - https://cs.illinois.edu/news/distinguished-lecture-series-dr-john-ousterhout
+
+https://cs.illinois.edu/news/featured-lectures#dls
+
+https://web.stanford.edu/~ouster/
+
+RaftScope - https://raft.github.io/raftscope/index.html
+
+PDF for the talk - https://raft.github.io/slides/uiuc2016.pdf
 
 ---
 
