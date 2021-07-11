@@ -1,13 +1,13 @@
 # Raft
 
-I think it's good to start off by answering some basic questions like:
-- What is Raft?
-- Why is it needed? One of the most important questions
-- What problem does it solve?
-- Are there no other things that solve the same problem?
-- How is it different / novel from other alternatives if there are alternatives?
-- How popular is it? Any reason for it's popularity?
-- How technically sound is it?
+I think it's good to start off by answering some basic questions like: 
+- What is Raft? [Question]
+- Why is it needed? One of the most important questions [Question]
+- What problem does it solve? [Question]
+- Are there no other things that solve the same problem? [Question]
+- How is it different / novel from other alternatives if there are alternatives? [Question]
+- How popular is it? Any reason for it's popularity? [Question]
+- How technically sound is it? [Question]
 
 ---
 
@@ -56,4 +56,108 @@ There's also a common Raft Google Group! https://groups.google.com/g/raft-dev
 Apparently there are some implementation specific forums too that I can find only in those specific projects, makes sense
 
 And then finally I see a lot of Raft implementations that people have published here - https://raft.github.io/#implementations . Who knows, there might be more but not updated in this list. Anyways, this is still a lot and a good list! :D
+
+As part of the implementations I also see what features the implementations have. Hmm
+
+- Leader Election + Log Replication
+- Persistence
+- Membership Changes
+- Log Compaction
+
+I'm wondering what each means. [Question] I can guess what it might be basically. For example -
+
+Leader Election is about electing a leader among the nodes? [Question]
+
+Log replication is the replication of logs? [Question] Logs which contains a sequence of commands which are inputs to the state machine as mentioned previously in the website
+
+Persistence is about persisting state on disk? [Question] State of state machine? 🤔 [Question]
+
+Membership Changes is about membership changing? [Question] New members coming up, existing members going away? [Question]
+
+Log Compaction is about compacting logs? Compacting as in? [Question] Compressing like zip, tar etc? Or taking all the commands and compacting intelligently? Like, if the logs say initially the value of X is 5, then it's 10, then it's 20, and finally it's 30, if the Log has all the values, and if it's passed to the state machine - I guess finally however the state machine is going to have the value of X as 20. So, one could compact all those logs of multiple values of X into one log? One log which contains X is 20? I don't know, just guessing as of now [Question]
+
+Also, I'm wondering why Leader Election + Log Replication are put together in the same column, hmm [Question]
+
+I guess these are good questions to ask. I'll probably revisit these when I'm done reading the research paper and understanding some of these or all of these :D
+
+I also realized I actually have more questions now, which need answering. For example, the "What is Raft?" para says this -
+
+```
+Raft is a consensus algorithm that is designed to be easy to understand. It's equivalent to Paxos in fault-tolerance and performance. The difference is that it's decomposed into relatively independent subproblems, and it cleanly addresses all major pieces needed for practical systems. We hope Raft will make consensus available to a wider audience, and that this wider audience will be able to develop a variety of higher quality consensus-based systems than are available today. 
+```
+
+I'm going to tag my questions with `[Question]` so that I can search later. I could use `?` to search too, still, because I used `?` too much in other places too and also, sometimes I don't use `?` but just say I'm guessing or I'm wondering, where it's actually a question. So, to revisit, I think both `?` and `[Question]` will help :)
+
+Some more questions from the above para about what's Raft -
+
+- `Raft is a consensus algorithm`, is there a formal definition for what's a consensus algorithm? Like, what's the problem statement and what's expected of the solution? Considering Raft is a particular solution / implementation [Question]
+
+- `that is designed to be easy to understand` - How did they come to the conclusion that it's easy to understand? Given easy and hard are subjective. Also, how do they know that the design is easy to understand, how did they even approach the problem with design, specifically easy to understand design as the main goal? Like, are there some designs that are easy to understand? Did they just go ahead and use that, like, use some existing approach? How did the authors think about the solution? 🤔 [Question]
+
+- `It's equivalent to Paxos in fault-tolerance and performance.` - How do they say this statement? Are there some sort of numbers to prove this? Numbers that denote fault-tolerance and performance for both Paxos and Raft and show that they are the same? Does the Raft paper prove this? Or this is just a general statement? Also, if there are numbers, what exactly do they denote under fault-tolerance and performance? As those are very generic, for example performance can mean "very fast" but uses more resources, or "very fast" but uses less resources comparatively, "uses less disk space" etc. Also, what do they mean by fault-tolerance? Like, what kind of faults / issues can it tolerate? Nodes going down? Network issues? [Question]
+
+- What is Paxos? I have heard it's also a consensus algorithm and that it's hard to understand. But, what is it? Like, under the hood what does it do? When did it come out (paper publish date)? What systems use it today? [Question]
+
+- How are Paxos and Raft different? Does it make sense to compare them like apples to apples comparison? Assuming they are both in the consensus algorithms domain and can be compared, or they both have different goals, different ideologies, designed with different things in mind etc and it doesn't make sense to compare them? [Question]
+
+- Are there other consensus algorithms other than Paxos and Raft? [Question] Algorithms that came way before or algorithms that are recent, that came after Paxos and Raft. [Question]
+
+- `The difference is that it's decomposed into relatively independent subproblems, and it cleanly addresses all major pieces needed for practical systems.` - How is Raft decomposed into relatively independent subproblems compared to Paxos? Does this mean that Paxos was more of a monolith or very tightly coupled with different subsystems solving different subproblems and was more dependent on each other? How does Raft address `major pieces`? What are these `major pieces`? And why are they `major`? Are there other `minor` pieces? or trivial pieces? And it says `for practical systems` - what does that mean? `practical`? Does Raft paper mention anything about it? [Question]
+
+I also had questions about the "Hold on - what is consensus?" para, it says
+
+```
+Consensus is a fundamental problem in fault-tolerant distributed systems. Consensus involves multiple servers agreeing on values. Once they reach a decision on a value, that decision is final. Typical consensus algorithms make progress when any majority of their servers is available; for example, a cluster of 5 servers can continue to operate even if 2 servers fail. If more servers fail, they stop making progress (but will never return an incorrect result).
+
+Consensus typically arises in the context of replicated state machines, a general approach to building fault-tolerant systems. Each server has a state machine and a log. The state machine is the component that we want to make fault-tolerant, such as a hash table. It will appear to clients that they are interacting with a single, reliable state machine, even if a minority of the servers in the cluster fail. Each state machine takes as input commands from its log. In our hash table example, the log would include commands like set x to 3. A consensus algorithm is used to agree on the commands in the servers' logs. The consensus algorithm must ensure that if any state machine applies set x to 3 as the nth command, no other state machine will ever apply a different nth command. As a result, each state machine processes the same series of commands and thus produces the same series of results and arrives at the same series of states. 
+```
+
+- `fault-tolerant distributed systems` - what kind of faults does it refer to and tolerate? I had asked a similar question before too. So, is it like nodes going down? Network issues (delay, connectivity issues etc)? [Question]
+
+- `Consensus involves multiple servers agreeing on values` - what values are these? I mean, does Raft define what kind of value this is? Is this value used by the system that uses Raft? For example, if etcd uses Raft, then there does it refer to a key-value pair? Or just a value maybe? Are there any constraints from Raft about what this value must be or what kind of characteristics or attributes it must have? [Question]
+
+- `Once they reach a decision on a value, that decision is final` - Reach a decision as in reach a consensus? And how does it ensure the part about `decision is final` and what does that mean? [Question]
+
+- `Typical consensus algorithms make progress when any majority of their servers is available; for example, a cluster of 5 servers can continue to operate even if 2 servers fail. If more servers fail, they stop making progress (but will never return an incorrect result).` - So, the majority is calculated by (N/2) + 1 ? Where N is the number of servers and (N/2) is an integer and not a floating point (with decimal points and values after decimal point other than 0) number? Also, it says if more servers fail - that is, when majority is not available, they stop making progress but that they will never return an incorrect result - does this mean that Raft values correctness over making progress and being available? More like consistency and correctness over availability, is it? Thinking about CAP theorem that is, which I don't know too much about though [Question]
+
+- `Consensus typically arises in the context of replicated state machines, a general approach to building fault-tolerant systems` - what are replicated state machines? and are there other approaches to build fault-tolerant systems? And why and how does consensus typically arise in the context of replicated state machines? [Question]
+
+- `Each server has a state machine and a log` - state machine meaning? Something that has a state and can have different states / change states? Log? Is it a WAL - Write Ahead Log? Does Raft define how should a state machine be? Or should a log be? Like, any constraints or characteristics or attributes around them? [Question]
+
+- `The state machine is the component that we want to make fault-tolerant, such as a hash table` - what does making the state machine fault tolerant mean? [Question]
+
+- `It will appear to clients that they are interacting with a single, reliable state machine, even if a minority of the servers in the cluster fail` - so, the cluster of servers appear as a single system for the client? How? Does the client know how to connect to just one host and assume there's just one server / system? It says `reliable` - how reliable? And it says `even if a minority of the servers in the cluster fail` - so, does it mean that it's fault tolerant because it is able to tolerate the failure / fault of a minority of servers? [Question]
+
+- `Each state machine takes as input commands from its log. In our hash table example, the log would include commands like set x to 3`. Is it like, state machine takes input / input commands from it's log and then moves to a new state as output? 🤔 And the state machine and log can depend on the system using Raft? Like, it can state machine can do any kind of thing? Same for log - it can store any kind of thing? Depending on the system using Raft? So, in this case / example, a hash table, so log includes hash table related commands? Like get, set etc? And state machine would be the hash table itself? As mentioned in `The state machine is the component that we want to make fault-tolerant, such as a hash table`
+
+- `A consensus algorithm is used to agree on the commands in the servers' logs`. Okay, so, in the example of a hash table log, every server has to agree to a log like `set x to 3` ?
+
+- `The consensus algorithm must ensure that if any state machine applies set x to 3 as the nth command, no other state machine will ever apply a different nth command` - So, when does the applying of commands from logs happen? Do different state machines apply the log at different times / can apply at different times? Assuming that it's already decided (decision) based on consensus what the nth command in the log will be
+
+- Is the consensus a blocking operation? Like, when a client tries to set a value to V, then, does Raft mention to append to the log this operation? And then tries to have a consensus among the servers? And when does state machine / raft, reply / respond to the client? It's the state machine that replies, right? Since Raft is only for consensus, and state machine is doing the job that the client wants. Does the state machine reply after consensus on the log, and applying the log to the state machine and changing the state? What about waiting for other state machines to apply the log? Hmm, maybe it's not needed? Also, considering all this, something to think about it, how is the performance of the state machine in case of too many servers being involved - to come to consensus and also how state machine performs in a write heavy client compared to a read heavy client, or let's say lot of requests - since all requests / commands become logs, right? But, does read and write require consensus? Also, what happens if the command / request / operation requested by the client is an invalid one? Does it still go to the log and state machine processes the command from the log and replies to the client that it's wrong? Hmm. And does the log with invalid command get replicated to all state machines? Hmm [Question]
+
+`As a result, each state machine processes the same series of commands and thus produces the same series of results and arrives at the same series of states.` - Makes sense! I guess, this is assuming that the cluster of state machines are the same program - like, same version of the program, which behave the same way given an input and produce the same output. Also, I'm assuming this is more like a pure function - given an input, it always returns the same output, regardless of what time etc and is not affected by any other external thing, and just works on the input
+
+---
+
+I'm wondering if I should see some videos / talks from the web page before reading the paper, hmm. Like, if it will be a good introduction instead of jumping into the research paper directly, hmm
+
+Like, some talk from the creators themselves?
+
+---
+
+Also, some extra questions that I had in mind based on the visualizations
+
+Questions
+- how does leader election work? [Question]
+- if there are five nodes and one node is dead, and two nodes are candidates in an election in a term. If other two nodes vote for the same one node, will that node become leader? Given the 3 votes - from itself, from other two nodes [Question]
+- is it possible that no leader gets elected in a term? [Question]
+- is it possible that no leader gets elected ever at some point? [Question]
+- when can leader election always fail for sure? Like, a leader is never elected at all, any time. Is that possible? [Question]
+
+---
+
+Resources:
+- https://www.youtube.com/results?search_query=Raft+distributed+systems
+
 
