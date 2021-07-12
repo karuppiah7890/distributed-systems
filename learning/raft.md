@@ -235,6 +235,105 @@ Also, apparently this random time out value method was chosen as an easier and s
 
 ---
 
+I had this other question before too but didn't note it down and assumed it might be solved in some way or the other
+
+[Question-And-Answer]
+
+The servers tend to simply vote for whoever sends a voting request to them. I noticed in the visualization that the servers vote for one and then deny votes for the others, how is this happening?
+
+[Answer]
+
+From the talk https://www.youtube.com/watch?v=vYp4LYbnnW8 , it is very important that a follower votes only for one candidate in a given term or else it affects the safety feature of the leader election where atmost only one leader can be elected - and a candidate will assume it's leader when it gets majority of votes. If followers grant vote for multiple candidates in a given term, then it's possible that many candidates think they got majority of votes and will think they have become leader. It's just a problematic thing completely basically. So, to avoid any such problems where a follower grants vote for different candidates in a given term, it's advised that the follower persit their vote so that even if they crash, when they come back, they know they voted in a given term
+
+[Guess] [Question] I'm assuming that the follower server will first persist their vote on disk and then reply to a candidate's request that they grant their vote. This way, there's no possibility of losing the persisted data. I think that if the follower replied to the candidate's request first with their vote and then tried to persist their reply, then it's possible that in some weird case - the follower could crash right after replying but before persisting their reply to the disk. That can be problematic because now follower would have voted but didn't persist it and when it crashes and comes back, the follower will think it didn't vote for the given term because there's no persisted data and will vote for any request vote messages it gets from other candidates and grant them vote, which means multiple votes by a single follower in a given term - that's a problem! So, it's more like -
+
+Assuming the follower hasn't voted yet in the given term, if the algorithm is -
+
+- Receive vote request
+- Reply to vote request and grant vote
+- Persist the grant vote data to disk
+
+Then the following things can happen, where a crash can happen before or after any step -
+
+Situation 1
+- Receive vote request
+- Crash
+
+Now, here the crash happened even before replying. It's okay I guess? It's like the server didn't exist before the vote or just during it, doesn't make much of a difference, since it couldn't reply
+
+Situation 2 - a problematic situation
+- Receive vote request
+- Reply to vote request and grant vote
+- Crash
+
+Now, here the crash happened after replying. But it never persisted the grant vote data to the disk. Next time if it comes back alive, since there's no data on disk, according the follower, it never voted in the given term. This is a problematic situation!! As it can affect the safety feature of the Raft's leader election algorithm. In this situation, the follower could grant votes to multiple candidates in the same term because of this crash and no persistence of the grant vote reply. Also, there could also be multiple crashes - a crash after every reply to grant vote without persisting, that can be a lot of votes to a lot of candidates in a given term!
+
+Situation 3
+- Receive vote request
+- Reply to vote request and grant vote
+- Persist the grant vote data to disk
+- Crash
+
+This is okay. It crashed after replying and persisting. Since it persisted the data, it doesn't affect safety feature of leader election
+
+Situation 3
+- Crash
+
+This is okay too I guess, it doesn't affect safety feature of leader election. The follower crashes before even receiving the vote request
+
+Assuming the follower hasn't voted yet in the given term, I think the following is a better algorithm -
+
+- Receive vote request
+- Persist the grant vote data to disk. The data that the follower is going to reply with
+- Reply to vote request and grant vote
+
+Then the following things can happen, where a crash can happen before or after any step -
+
+Situation 1
+- Receive vote request
+- Crash
+
+Now, here the crash happened even before replying. It's okay I guess? It's like the server didn't exist before the vote or just during it, doesn't make much of a difference, since it couldn't reply
+
+Situation 2
+- Receive vote request
+- Persist the grant vote data to disk. The data that the follower is going to reply with
+- Crash
+
+This is okay I guess? I mean, the follower didn't respond to the request and crashed before it could respond. It did persist it though - about what it's going to respond with. Can this be problematic though? Like, if the follower receives any other vote request for the same, after it comes back alive, it will think it replied to the previous request and deny votes. Is that okay? [Question] I guess it's okay? It's almost as if the follower's crash for a small period of time during the leader election affected the election - as if the the follower didn't take part in it at all - since it didn't grant vote to any candidate even if it receives requests - almost as good as follower being in crashed state the whole time and not replying / granting vote to any candidate. Probably if no leader got elected, then in the next term one could get elected. This doesn't affect the safety feature I guess as I don't see the follower voting for multiple candidates in a given term [Question] [Guess]
+
+Situation 3
+- Receive vote request
+- Persist the grant vote data to disk. The data that the follower is going to reply with
+- Reply to vote request and grant vote
+- Crash
+
+This is okay too. I mean, the crash happens after persisting and voting for a candidate. So, not a problem. Nothing affecting the safety feature of leader election
+
+Situation 4
+- Crash
+
+Again, it's okay - it doesn't affect the safety feature of leader election
+
+---
+
+[Guess] [Question] Also, I'm assuming that the follower simply has to store the following data before replying to the request vote message -
+
+- Term of Vote
+- Voted For
+
+[Guess] [Question] Assuming that this entry in the disk simply means they have already voted, so no need for another field like "voted?", and I don't think the follower has to remember the votes it denied or didn't vote. Also, maybe, if the leader for the term is elected, I guess this data for the particular term can be removed from the disk
+
+[Guess] [Question] I'm also assuming that when a follower gets a vote request, it will first check the disk and see if it has voted for the given term and then, if has voted already, deny it, and if it hasn't voted already, persist to disk and then reply to the vote
+
+---
+
+[Question] Is it possible that in a given term a candidate sends multiple vote requests to the same candidate? Or it's only once? If it's multiple, is it okay? Can it happen? Or it should never happen and it's a problem? Also, if multiple vote requests come from the same candidate - is it more of a multiple broadcast and hence multiple vote requests from the same candidate to other servers in a given term? Also, if multiple is possible / is okay, so, servers need to remember who they voted for apart from the term they voted in by persisting it and vote for the same candidate if they send the vote request again for the same term?
+
+---
+
+---
+
 Resources:
 - https://www.youtube.com/results?search_query=Raft+distributed+systems
 
