@@ -2,7 +2,7 @@
 
 I think it's good to start off by answering some basic questions like: 
 - What is Raft? [Question]
-- Why is it needed? One of the most important questions [Question]
+- Why is Raft needed? One of the most important questions [Question]
 - What problem does it solve? [Question]
 - Are there no other things that solve the same problem? [Question]
 - How is it different / novel from other alternatives if there are alternatives? [Question]
@@ -11,7 +11,7 @@ I think it's good to start off by answering some basic questions like:
 
 ---
 
-I just read the `What is Raft?` , `Hold on—what is consensus?` in https://raft.github.io/
+I just read the `What is Raft?` , `Hold on—what is consensus?` sections in https://raft.github.io/
 
 I also tried out the `Raft Visualization` in https://raft.github.io/ It was interesting to note that there are a lot of interactive elements!! I had used it for moment or so long ago and forgot that some things can be interacted with.
 
@@ -151,8 +151,8 @@ Also, some extra questions that I had in mind based on the visualizations
 Questions
 - how does leader election work? [Question]
 - if there are five nodes and one node is dead, and two nodes are candidates in an election in a term. If other two nodes vote for the same one node, will that node become leader? Given the 3 votes - from itself, from other two nodes [Question]
-- is it possible that no leader gets elected in a term? [Question]
-- is it possible that no leader gets elected ever at some point? [Question]
+- is it possible that no leader gets elected in a term? [Question] [Answered]
+- is it possible that no leader gets elected ever at some point? [Question] [Answered]
 - when can leader election always fail for sure? Like, a leader is never elected at all, any time. Is that possible? [Question]
 
 ---
@@ -202,6 +202,36 @@ https://web.stanford.edu/~ouster/
 RaftScope - https://raft.github.io/raftscope/index.html
 
 PDF for the talk - https://raft.github.io/slides/uiuc2016.pdf
+
+---
+
+[Question-And-Answer]
+
+is it possible that no leader gets elected in a term?
+
+[Answer]
+
+After going through the talk https://www.youtube.com/watch?v=vYp4LYbnnW8, yes, it is possible no leader gets elected in a term. It is possible when there's a "split-vote" situation where the candidates get equal number of votes and not a majority and none of them become a leader. So, in such cases, the servers just wait for their timeouts and since there's no leader, they don't get heartbeats so they will timeout. So, whichever server times out will then again increment it's term and request for votes. Usually only one times out first and will get all the votes before others timeout and it will become the leader
+
+---
+
+[Question-And-Answer]
+
+is it possible that no leader gets elected ever at some point?
+
+[Answer]
+
+After going through the talk https://www.youtube.com/watch?v=vYp4LYbnnW8, no, it's not possible. The Raft algorithm suggests some ways to avoid this, so if that's followed, meaning if Raft algorithm is properly followed, no, it's not possible that no leader gets elected ever at some point. Raft algorithm ensures safety AND liveness
+
+Safety - atmost only one leader gets elected in a single term. "Atmost one" means - 0 or 1. So yeah, there can be no leaders in a term as answered in `is it possible that no leader gets elected in a term?` question, but there cannot be more than 1
+
+Liveness - the cluster progresses - one of the servers get elected as a leader at some point
+
+For a leader to surely get elected, the algorithm suggests to use random timeout times for each of the servers. A random value between the same range for all servers, like [T, 2T], for example [150ms, 300ms], and choose timeouts from this range for all the servers. This way, not all will timeout at the same time, instead some will timeout earlier than the others and mostly one will timeout first - assuming each has a different random timeout - because we don't want servers to timeout at the same time and send requests for votes
+
+Also another thing mentioned in the talk and in the algorithm was how it is important for the broadcast time to be way less than time T - the start of the timeout range for choosing a random value. The reason for this is that - it's expected for a server to timeout first and when it times out, it will try to send request for votes to all the servers using a broadcast and it's expected that the other servers are still waiting for their timeouts while they reply to the voting request and vote for the server that timed out first. This way the server that timed out first will become leader before the other servers even time out
+
+Also, apparently this random time out value method was chosen as an easier and simpler and understandable alternative to some sort of ranking method to rank servers. It seems that was more complex and had many special cases - basically many `if`s and also more state space, and then they stumbled upon the random timeout value idea and felt that it was way simpler and solved problems
 
 ---
 
