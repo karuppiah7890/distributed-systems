@@ -332,6 +332,72 @@ Again, it's okay - it doesn't affect the safety feature of leader election
 
 ---
 
+I'm reading the research paper now. I plan to read each line and understand what it means or ask questions which I can answer later
+
+The paper starts with
+
+```
+Raft is a consensus algorithm for managing a replicated log
+```
+
+Looks like the main feature of Raft is - a consensus algorithm for managing a replicated log. Note how it talks about the replicated log. I think the leader election and leader concept is just to maintain one perfect log - as the algorithm ensures that the leader's log is perfect - this is from the talk - https://www.youtube.com/watch?v=vYp4LYbnnW8
+
+I was skimming through a bit about consensus algorithm in wikipedia
+
+https://duckduckgo.com/?t=ffab&q=consensus+algorithm&ia=web
+
+https://en.wikipedia.org/wiki/Consensus_(computer_science)
+
+It was a very formal definition and a bit vague too for me. Maybe I'll come back and read again later
+
+Moving on
+
+```
+It produces a result equivalent to (multi-)Paxos, and it is as efficient as Paxos, but its structure is different from Paxos; this makes Raft more understandable than Paxos and also provides a better foundation for building practical systems
+```
+
+Looks like there's something called as the `multi-Paxos` and Raft's result is equivalent to the result of `multi-Paxos`. What's `multi-Paxos` at a high level and what kind of result does it produce? [Question]
+
+And it's as efficient as Paxos - what does this mean - what kind of efficiency? What kind of performance / efficiency numbers is it talking about over here? [Question]
+
+Raft's structure is different frmo Paxos - hmm. I think this was mentioned in the talk too - how Raft is decomposed into sub problems - https://www.youtube.com/watch?v=vYp4LYbnnW8 - mostly relatively independent sub problems
+
+The structure of Raft `makes Raft more understandable than Paxos` it seems. And it `also provides a better foundation for building practical systems` - why is that, does Paxos not help with building practical systems? And practical systems? What does that mean? Real world systems? [Question] I think I had similar question before too, hmm
+
+```
+In order to enhance understandability, Raft separates the key elements of consensus, such as leader election, log replication, and safety, and it enforces a stronger degree of coherency to reduce the number of states that must be considered.
+```
+
+Okay, so, we see the key elements of Consensus, or is it key elements of Raft? Is it generic here? or should it be specific and say "key elements of Raft"?
+
+Key elements being - leader election and log replication and also safety. So, that's how the sub problems are divided - the sub problems are all key elements I guess
+
+What happened to log compaction? membership changes? persistence? [Question]
+
+And yeah, to make things easier to understand, there are less states in Raft algorithm. Like, for example in server states - there's only three states - follower, candidate and leader
+
+```
+ Results from a user study demonstrate that Raft is easier for students to learn than Paxos.
+```
+
+Yup, I noticed this from the talk https://www.youtube.com/watch?v=vYp4LYbnnW8 . I'm yet to see the user study and details around the results. It does sound like an interesting thing. Funny thing is, the Paxos and Raft course - both was taught by John Ousterhout, the co-author of Raft :P In the talk https://www.youtube.com/watch?v=vYp4LYbnnW8 , one of the students asks "Didn't you say you didn't understand Paxos?" :P I think he did understand it a lot / enough, and completely after building Raft, like he mentioned in the talk
+
+```
+Raft also includes a new mechanism for changing the cluster membership, which uses overlapping majori- ties to guarantee safety.
+```
+
+Why do they refer to it as `a new mechanism` ? [Question]
+
+Also, how do the cluster membership changes happen? A server just goes away? Is it like shutdown server and done? And then like, bring up new servers and start them off. Also, how does it smoothly happen, like no issues, no downtime etc. Also, what are the scenarios when you would need it. I mean, is it more like - some old servers are not there (removed) and/ not functioning will be removed from the cluster membership and list of cluster members? Or is it about servers that do exist and work well but later can become unhealthy and others get to know about this server not working / being unhealthy but it is not removed from the cluster and is shown as part of the members but as an unhealthy member. Is that how it is?
+
+Also, does cluster membership help with maintenance works? Like, some server needs to be taken for maintenance - upgrade OS etc [Question]
+
+And in what cases would new members be added? To replace older members for some reason? To scale? But Raft has bottlenecks with more servers, right? I mean, if there are more servers, all servers must spend more time sending broadcasts and do what not - especially when they are leaders [Question]
+
+And what does `overlapping majorities` mean? How does using `overlapping majorities` `guarantee safety`? 🤔 [Question]
+
+
+
 ---
 
 Resources:
