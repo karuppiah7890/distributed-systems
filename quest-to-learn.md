@@ -45,5 +45,5 @@ Next steps?
         - https://sre.google/books/
         - https://www.amazon.com/Distributed-Systems-Principles-Andrew-Tanenbaum/dp/153028175X
         - Research papers in https://www.usenix.org/conference/osdi20 , https://sosp19.rcs.uwaterloo.ca/
-
+- Patterns of Distributed Systems - https://martinfowler.com/articles/patterns-of-distributed-systems/index.html
 
