@@ -408,6 +408,62 @@ One of the things that John Ousterhout mentions in the talk https://www.youtube.
 
 ---
 
+Recently I was reading and sometimes skimming through a lot of the sections of the Raft paper
+
+Now I'm at Section 8 - which I have completed reading
+
+One of the questions I had was - around read-only requests returning stale data - how is this possible? And why is it that we are considering only read-only requests when it comes to stale data? What about write operations going wrong? I'm using the word `requests` and `operations` interchangeably here [Question]
+
+---
+
+I'm currently at section 9. Apparently the researchers have implemented Raft with C++ for their service and it's freely available!! :D
+
+LogCabin source code - https://github.com/logcabin/logcabin
+
+And of course there are many other implementations mentioned in https://raft.github.io/ , previously http://raftconsensus.github.io
+
+So, in this section we are looking at implementation and evaluation as the name of the section suggests. There are criterias for evaluation, interesting
+
+For some weird reason the user study materials weren't available in the link provided in the paper -
+
+http://ramcloud.stanford.edu/~ongaro/userstudy/
+
+But I got it here
+
+https://ongardie.net/static/raft/userstudy/ through https://duckduckgo.com/?t=ffab&q=raft+user+study&ia=web
+
+I might take the quizzes at some point ;) After checking out the videos :D At least the Raft one, if not Paxos one
+
+https://ongardie.net/static/raft/userstudy/quizzes.html
+
+There's also this answers / guide to check the answers -
+
+https://ongardie.net/static/raft/userstudy/rubric.pdf
+
+https://ongardie.net/
+
+Next there's mention of Correctness and Proof
+
+It talks about TLA+ which I haven't used but I have kind of heard of it before I think. A system to prove stuff or something like that
+
+https://duckduckgo.com/?t=ffab&q=TLA+specification&ia=web
+
+https://www.learntla.com/introduction/ , https://www.learntla.com/book/
+
+https://en.wikipedia.org/wiki/TLA%2B
+
+Okay, so it's a formal specification language. The full form is "Temporal Logic of Actions", nice name!
+
+Apparently there's the TLA+ code, not sure where, I couldn't exactly find it in the dissertation
+
+"ONGARO, D. Consensus: Bridging Theory and Practice. PhD thesis, Stanford University, 2014"
+
+https://github.com/ongardie/dissertation
+
+I'm moving on to Performance for now
+
+Wow, there was a lot of information in Performance section but I couldn't grasp it well. The explanation and especially the graph was hard to make sense. I think I'll have to spend more time later on this and read this again in a second parse later
+
 
 
 ---
