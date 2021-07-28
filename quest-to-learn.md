@@ -47,3 +47,12 @@ Next steps?
         - Research papers in https://www.usenix.org/conference/osdi20 , https://sosp19.rcs.uwaterloo.ca/
 - Patterns of Distributed Systems - https://martinfowler.com/articles/patterns-of-distributed-systems/index.html
 
+
+Sidetrack
+- To learn about concurrent network servers
+    - https://eli.thegreenplace.net/2017/concurrent-servers-part-1-introduction/ and the full series
+    - Other interesting concurrency blog posts - https://eli.thegreenplace.net/tag/concurrency
+
+- To learn programming language stuff
+    - https://eli.thegreenplace.net/2015/another-look-at-my-programming-language-arsenal/
+    - https://eli.thegreenplace.net/tag/programming

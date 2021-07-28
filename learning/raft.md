@@ -464,6 +464,13 @@ I'm moving on to Performance for now
 
 Wow, there was a lot of information in Performance section but I couldn't grasp it well. The explanation and especially the graph was hard to make sense. I think I'll have to spend more time later on this and read this again in a second parse later
 
+I just skimmed through all of the other sections - 9, 10, 11 and 12
+
+Pretty interesting. Especially the mentions about the related work
+
+For now I'll go ahead and try out implementing this / practicing the code at https://github.com/eliben/raft following the series at
+
+https://eli.thegreenplace.net/2020/implementing-raft-part-0-introduction/
 
 
 ---
