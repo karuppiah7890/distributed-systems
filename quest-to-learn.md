@@ -2,57 +2,15 @@
 
 I have been on a quest to find a structure to learn Distributed Systems and learn it in a structure - theoretically and practically
 
-Below is a continuous log of my quest
+I want to learn about distributed systems and also specifically about distributed databases
 
----
+Some of the high level questions I want to answer are
+- What is a distributed system?
+- What kind of distributed systems are people building today?
+- What are the concepts behind the different distributed systems?
+- How do people test distributed systems?
+- Research papers behind distributed systems? Current and old ones
+- How do people "scale" with the help of distributed systems?
+- What kind of problems does a distributed system solve? and how does it solve it?
 
-https://duckduckgo.com/?t=ffab&q=how+to+learn+distributed+systems&ia=web
-
-https://medium.com/@polyglot_factotum/how-i-am-learning-distributed-systems-7eb69b4b51bd
-
-https://medium.com/@polyglot_factotum
-
-https://www.confluent.io/learn/distributed-systems/
-
-https://betterprogramming.pub/a-thorough-introduction-to-distributed-systems-3b91562c9b3c
-
-https://learn.particular.net/courses/distributed-systems-design-fundamentals-online
-
-https://learn.particular.net/courses/adsd-online
-
----
-
-I have one basic plan now! :) Gonna try it out
-
-Next steps?
-- Checkout the Raft research paper?
-- Checkout Raft dissertation? https://web.stanford.edu/~ouster/cgi-bin/papers/OngaroPhD.pdf
-- Checkout about Chubby - https://static.googleusercontent.com/media/research.google.com/en//archive/chubby-osdi06.pdf , https://www.cs.utexas.edu/users/lorenzo/corsi/cs380d/papers/paper2-1.pdf ?
-- Checkout about Zookeeper - https://pdos.csail.mit.edu/6.824/papers/zookeeper.pdf ?
-- Kafka Design - https://kafka.apache.org/documentation/#design ?
-- "Introduction to Reliable and Secure Distributed Programming", by Cachin, Guerraoui, and Rodrigues? - https://distributedprogramming.net/
-- The lecture notes of a course at Cambridge taught by Martin Kleppmann? - https://www.cl.cam.ac.uk/teaching/2021/ConcDisSys/dist-sys-notes.pdf
-- Contribute to a complex distributed system? Which one?
-- http://www.distributedsystemscourse.com/
-    - https://www.youtube.com/c/DistributedSystemsCourse
-    - https://www.youtube.com/playlist?list=PLOE1GTZ5ouRPbpTnrZ3Wqjamfwn_Q5Y9A
-    - http://www.colohan.com/
-    - Found many resources from here -
-        - Distributed Systems Class videos by Lindsey Kuper from UCSC https://www.youtube.com/c/lindseykuperwithasharpie
-        - "Distributed Systems lecture series" by Martin Kleppmann from the University of Cambridge - https://www.youtube.com/playlist?list=PLeKd45zvjcDFUEv_ohr_HdUFe97RItdiB
-        - Distributed Systems Class videos by Robert Morris from MIT - https://www.youtube.com/channel/UC_7WrbZTCODu1o_kfUMq88g
-        - https://aws.amazon.com/builders-library/
-        - https://sre.google/books/
-        - https://www.amazon.com/Distributed-Systems-Principles-Andrew-Tanenbaum/dp/153028175X
-        - Research papers in https://www.usenix.org/conference/osdi20 , https://sosp19.rcs.uwaterloo.ca/
-- Patterns of Distributed Systems - https://martinfowler.com/articles/patterns-of-distributed-systems/index.html
-
-
-Sidetrack
-- To learn about concurrent network servers
-    - https://eli.thegreenplace.net/2017/concurrent-servers-part-1-introduction/ and the full series
-    - Other interesting concurrency blog posts - https://eli.thegreenplace.net/tag/concurrency
-
-- To learn programming language stuff
-    - https://eli.thegreenplace.net/2015/another-look-at-my-programming-language-arsenal/
-    - https://eli.thegreenplace.net/tag/programming
+And everything else around distributed systems - patterns about distributed systems and more ! :)
