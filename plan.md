@@ -38,3 +38,9 @@ Three broad mediums for learning
 - Text
 
 There's also interaction / collaboration with people as part of the mediums. Interactions - discussions, question and answer forums etc. Collaboration - working together and collaborating on some project
+
+---
+
+About Contributing to Open Source projects, I could checkout open source projects which have distributed systems at their core - just applications that are based on distributed systems concepts, for example Kubernetes platform is a distributed system with many components working together. But come to think of it...I don't think any of them have state or is aware of one another. All the state is in etcd or similar backend databases, and I believe almost all components are stateless and depend on the API server for data or sometimes have some cache which is kind of like a state. And all things happens through the API server instead of having direct communication with other components. Gotta check if Kubernetes really fits the distributed system definition
+
+And then there's distributed databases - I could contribute to open source distributed databases like CockroachDB among many others. And I could also check the operators for managing distributed databases or just databases, for automatic management - because some databases are not distributed or may need manual management for some actions and hence need some controller / operator / manager for automated actions. And such operators and managers kind of system are usually distributed
